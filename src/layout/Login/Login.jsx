@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "./Login.css";
 import Logo from "../../components/Logo/Logo";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const URL = "http://localhost:5000/api/auth";
 
 function Login() {
-  // useEffect(() => {
-  //   const check = localStorage.getItem("customer");
-  //   console.log("Customer Token : ", check);
-  //   if (check) {
-  //     window.location.href = "/select";
-  //     return;
-  //   }
-  // }, []);
+  useEffect(() => {
+    const check = localStorage.getItem("customer");
+    console.log("Customer Token : ", check);
+    if (check) {
+      navigate("/select");
+      return;
+    }
+  }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const showError = () => {
     document.querySelector(".error-message").classList.remove("hidden");
@@ -26,13 +29,12 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     console.log(email, password);
 
     if (!email || !password) {
       showError();
     } else if (email || password) {
-      delError();
+      delError();      
       fetch(URL + "/login", {
         method: "POST",
         headers: {
@@ -53,13 +55,24 @@ function Login() {
         })
         .then((result) => {
           console.log("SignIn success : ", result);
-          alert("Login Successfully.");
-          localStorage.setItem("customer", JSON.stringify(result));
-          window.location.href = "/select";
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            localStorage.setItem("customer", JSON.stringify(result));
+            navigate("/select");
+          });
         })
         .catch((e) => {
           console.log("**CATCH Error(SignIn) : ", e);
-          alert(e.message);
+          Swal.fire({
+            icon: "error",
+            title: "Login Fail",
+            text: "Invalid email or password",
+          });
         });
     }
   };
@@ -94,7 +107,7 @@ function Login() {
                 type="text"
                 id="email"
                 name="email"
-                className="grow"
+                className="grow max-sm:text-sm"
                 placeholder="customer@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -124,7 +137,7 @@ function Login() {
                 type="password"
                 id="password"
                 name="password"
-                className="grow"
+                className="grow max-sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -164,7 +177,7 @@ function Login() {
             </label>
           </div>
           <div className="error-message text-red-700 grid justify-items-end hidden">
-            <label className="text-xs flex items-center gap-1 font-semibold">
+            <label className="text-sm flex items-center gap-1 font-semibold max-sm:text-xs">
               Please Input email or password
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -181,16 +194,22 @@ function Login() {
               </svg>
             </label>
           </div>
-          <div className="text-end">
-            <label className="text-xs">
+          <div className="text-center">
+            <label className="text-sm max-sm:text-xs">
               Don't have an account?
-              <a href={"/register"} className="font-bold ml-1">
+              <a
+                href={"/register"}
+                className="font-bold ml-1 underline underline-offset-1 max-sm:text-sm"
+              >
                 Sign up
               </a>
             </label>
           </div>
           <div className="flex justify-center">
-            <button type="submit" className="btn btn-neutral w-64 text-white">
+            <button
+              type="submit"
+              className="btn btn-neutral w-64 text-white max-sm:w-36 max-lg:w-44 max-xl:w-56"
+            >
               Login
             </button>
           </div>
