@@ -1,20 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import "./Select.css";
 
 const URL = "http://localhost:5000/api/auth";
 
 function Select() {
-    // useEffect(() => {
-    //   const check = localStorage.getItem("customer");
-    //   console.log("Customer Token : ", check);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const check = localStorage.getItem("customer");
+    console.log("Customer Token : ", check);
 
-    //   if (!check) {
-    //     window.location.href = "/";
-    //     return;
-    //   }
-    // });
+    if (!check) {
+      navigate("/");
+      return;
+    }
+  });
 
   return (
     <section id="select-page" className="min-h-screen">
@@ -25,7 +28,7 @@ function Select() {
             <h1>Home</h1>
           </div>
           <div className="list-pot h-4/5 w-full bg-neutral rounded-box p-5 gap-2 space-y-2 text-white flex  flex-col">
-            <div className="flex items-center justify-between mx-8">
+            <div className="flex justify-center items-center gap-4 mx-8">
               <div className="pot btn w-64 h-24">
                 <label></label>
               </div>
@@ -49,7 +52,7 @@ function Select() {
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between mx-8">
+            <div className="flex justify-center items-center gap-4 mx-8">
               <div className="pot btn w-64 h-24">
                 <label></label>
               </div>
